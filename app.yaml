@@ -4,6 +4,10 @@ runtime: php55
 api_version: 1
 
 handlers:
+
+- url: /sql
+  script: createTable.php
+  
 - url: .*
   script: freedays.php
   
