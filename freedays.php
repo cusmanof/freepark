@@ -16,7 +16,7 @@ if (!$db_selected) {
 
 $PP = file_get_contents("php://input");
 $data = json_decode($PP);
-
+file_put_contents("zpp.txt", $PP);
 $name = $data->name;
 $parkId = $data->parkId;
 $cmd = $data->cmd;
@@ -24,9 +24,8 @@ $ret = array();
 $ret[cmd]="ret";
 $ret[name]=$name;
 $ret[parkId]=$parkId;
-$dts = array();
-$ret[dates] = $dts;
-if ($cmd == "get") {
+$ret[dates] = array();
+$ret[used] = array();
 /*
 	$sql = "CREATE TABLE freedays_tbl (
 	  owner varchar(64) ,
@@ -40,20 +39,8 @@ if ($cmd == "get") {
 	file_put_contents("ze2.txt",  mysql_error());
 */
 	
-	$sql = "SELECT free_date from freedays_tbl WHERE parkId='$parkId'";
-	$result = mysql_query($sql);
-	if ($result) {
-		// output data of each row
-		$idx=0;
-		while($row = mysql_fetch_array($result)) {	
-			 $dts[$idx++] = $row[0];
-		}
-		$ret[dates] = $dts;
-	}
-	$en = json_encode($ret);
-	echo $en;
-	file_put_contents("zos.txt", $en );
-} elseif ($cmd == "put") {
+	
+if ($cmd == "put") {
 	file_put_contents("zin.txt", $PP);
 	//remove unused entries first.
 	$sql = "DELETE FROM freedays_tbl WHERE parkId='$parkId' AND (user IS NULL OR user='');";
@@ -65,7 +52,51 @@ if ($cmd == "get") {
 		
 	}
 }
+if ( $cmd=="get" || $cmd =="put") {
+	$sql = "SELECT * from freedays_tbl WHERE parkId='$parkId'";
+	$result = mysql_query($sql);
+	if ($result) {
+		// output data of each row
+		$idx=0;
+		while($row = mysql_fetch_array($result)) {	
+			 $dts[$idx] = $row['free_date'];
+			 $used[$idx] = $row['user'];
+			 $idx++;
+		}
+		$ret[dates] = $dts;
+		$ret[used] = $used;
+	}
+	$en = json_encode($ret);
+	echo $en;
+	file_put_contents("zos.txt", $en );
+}
+if ( $cmd=="rel" ) {
+	$sql = "UPDATE freedays_tbl SET user=null WHERE user ='$data->user'  AND free_date = '$data->date'";
+	$result = mysql_query($sql);
+}
+if ( $cmd=="all" || $cmd="rel") {
+	$sql = "SELECT * from freedays_tbl";
+	$result = mysql_query($sql);
+	if ($result) {
+		// output data of each row
+		$idx=0;
+		while($row = mysql_fetch_array($result)) {
+			 $own[$idx] = $row['owner'];
+			 $prk[$idx] = $row['parkId'];
+			 $usr[$idx] = $row['user'];
+			 $fre[$idx] = $row['free_date'];
+			 $idx++;
+		}
+		$ret[name] = $own;
+		$ret[parkId] = $prk;
+		$ret[used] = $usr;
+		$ret[dates] = $fre;
 
+	}
+	$en = json_encode($ret);
+	echo $en;
+	file_put_contents("zdts.txt", $en );
+}
 
 mysql_close();
 
