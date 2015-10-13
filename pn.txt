@@ -1,1 +1,0 @@
-INSERT INTO freedays_tbl (name, parkId, date) VALUES ('Frank','P1','Oct 17, 2015 12:00:00 AM')
