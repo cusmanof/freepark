@@ -1,6 +1,3 @@
-<html>
-<body>
-hello 
 <?php
 $conn = mysql_connect(":/cloudsql/freepark-1091:frank", "root", "");
 /*$conn = mysql_connect("localhost:3306", "root", "rootmysql"); */
@@ -90,6 +87,5 @@ if ( $cmd=="all" || $cmd="rel" || $cmd="res") {
 mysql_close();
 
 ?>
-</body>
-</html>
+
 
