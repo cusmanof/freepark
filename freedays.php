@@ -10,7 +10,7 @@ $db_selected = mysql_select_db('freepark');
 if (!$db_selected) {
 	echo 'Can\'t use db : ' . mysql_error();
     die ('Can\'t use db : ' . mysql_error());
-}	
+}
 
 $PP = file_get_contents("php://input");
 $data = json_decode($PP);
