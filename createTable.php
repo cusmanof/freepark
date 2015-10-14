@@ -22,6 +22,7 @@ if (!$db_selected) {
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1";
 	
 	$retval = mysql_query( $sql );
+	echo mysql_error();
 ?>
 
 
