@@ -12,7 +12,6 @@ if (!$db_selected) {
 
 $PP = file_get_contents("php://input");
 $data = json_decode($PP);
-file_put_contents("zpp.txt", $PP);
 $name = $data->name;
 $parkId = $data->parkId;
 $cmd = $data->cmd;
@@ -61,7 +60,6 @@ if ( $cmd=="rel" ) {
 if ( $cmd=="res" ) {
 	$sql = "UPDATE freedays_tbl SET userId = '$data->userId' WHERE userId IS NULL  AND free_date = '$data->date' LIMIT 1";
 	$result = mysql_query($sql);
-	file_put_contents("zdts.txt", $sql . " : " . $result  ." -> " . mysql_error() );
 }
 if ( $cmd=="all" || $cmd="rel" || $cmd="res") {
 	$sql = "SELECT * from freedays_tbl";
@@ -84,7 +82,6 @@ if ( $cmd=="all" || $cmd="rel" || $cmd="res") {
 	}
 	$en = json_encode($ret);
 	echo $en;
-	file_put_contents("zout.txt", $en );
 }
 
 mysql_close();
