@@ -26,11 +26,11 @@ $ret[used] = array();
 
 //Select Database
 
-	
+/*	
 if ($cmd == "put") {
 	//remove unused entries first.
 	$sql = "DELETE FROM freedays_tbl WHERE parkId='$parkId' AND (userId IS NULL OR userId='')";
-	$result = mysql_query($sql);
+	mysql_query($sql);
 	for ($i = 0; $i < count($data->dates); $i++) {
 		$dd = $data->dates[$i];
 		$sql = "INSERT INTO freedays_tbl (owner, parkId, free_date) VALUES ('$name','$parkId','$dd')";
@@ -85,7 +85,7 @@ if ( $cmd=="res" ) {
 	$en = json_encode($ret);
 	echo $en;
 //}
-
+*/
 mysql_close();
 
 ?>
