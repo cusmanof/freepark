@@ -5,7 +5,7 @@ api_version: 1
 
 handlers:
 
-- url: /sql
+- url: /create
   script: createTable.php
   
 - url: .*
