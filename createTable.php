@@ -1,11 +1,14 @@
 <?php
-$conn = mysql_connect(":/cloudsql/freepark-1091:frank", "root", "");
+echo "starting";
+$conn = mysql_connect(":/cloudsql/fpark-1098:frank", "root", "");
 if (!$conn) {
-    die('Connect Error (' . mysql__error());
+	echo mysql_error();
+    die('Connect Error (' . mysql_error());
 }
 
 $db_selected = mysql_select_db('freepark');
 if (!$db_selected) {
+	echo mysql_error();
     die ('Can\'t use db : ' . mysql_error());
 }	
 
@@ -22,7 +25,7 @@ if (!$db_selected) {
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1";
 	
 	$retval = mysql_query( $sql );
-	echo mysql_error();
+	echo "Any errors " . mysql_error();
 ?>
 
 

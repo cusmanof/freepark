@@ -1,5 +1,5 @@
 <?php
-$conn = mysql_connect(":/cloudsql/freepark-1091:frank", "root", "");
+$conn = mysql_connect(":/cloudsql/fpark-1098:frank", "root", "");
 /*$conn = mysql_connect("localhost:3306", "root", "rootmysql"); */
 if (!$conn) {
 	echo 'Connect Error (' . mysql_error();
@@ -11,18 +11,17 @@ if (!$db_selected) {
 	echo 'Can\'t use db : ' . mysql_error();
     die ('Can\'t use db : ' . mysql_error());
 }
-
 $PP = file_get_contents("php://input");
 $data = json_decode($PP);
 $name = $data->name;
 $parkId = $data->parkId;
 $cmd = $data->cmd;
 $ret = array();
-$ret[cmd]="ret";
-$ret[name]=$name;
-$ret[parkId]=$parkId;
-$ret[dates] = array();
-$ret[used] = array();
+$ret['cmd']='ret';
+$ret['name']=$name;
+$ret['parkId']=$parkId;
+$ret['dates'] = array();
+$ret['used'] = array();
 
 //Select Database
 
@@ -38,7 +37,7 @@ if ($cmd == "put") {
 		
 	}
 }
-if ( $cmd=="get" || $cmd =="put") {
+if ( $cmd == "get" || $cmd  == "put") {
 	$sql = "SELECT * from freedays_tbl WHERE parkId='$parkId'";
 	$result = mysql_query($sql);
 	if ($result) {
@@ -49,21 +48,22 @@ if ( $cmd=="get" || $cmd =="put") {
 			 $used[$idx] = $row['userId'];
 			 $idx++;
 		}
-		$ret[dates] = $dts;
-		$ret[used] = $used;
+		if ($dts != null) {
+			$ret['dates'] = $dts;
+			$ret['used'] = $used;
+		}
+		echo json_encode($ret);
 	}
-	$en = json_encode($ret);
-	echo $en;
 }
-if ( $cmd=="rel" ) {
+if ( $cmd == "rel" ) {
 	$sql = "UPDATE freedays_tbl SET userId = NULL WHERE userId ='$data->userId'  AND free_date = '$data->date'";
 	$result = mysql_query($sql);
 }
-if ( $cmd=="res" ) {
+if ( $cmd == "res" ) {
 	$sql = "UPDATE freedays_tbl SET userId = '$data->userId' WHERE userId IS NULL  AND free_date = '$data->date' LIMIT 1";
 	$result = mysql_query($sql);
 }
-//if ( $cmd=="all" || $cmd="rel" || $cmd="res") {
+if ( $cmd == "all" || $cmd == "rel" || $cmd == "res") {
 	$sql = "SELECT * from freedays_tbl";
 	$result = mysql_query($sql);
 	if ($result) {
@@ -76,18 +76,17 @@ if ( $cmd=="res" ) {
 			 $fre[$idx] = $row['free_date'];
 			 $idx++;
 		}
-		$ret[name] = $own;
-		$ret[parkId] = $prk;
-		$ret[used] = $usr;
-		$ret[dates] = $fre;
+		if ($fre != null) {
+			$ret['name'] = $own;
+			$ret['parkId'] = $prk;
+			$ret['used'] = $usr;
+			$ret['dates'] = $fre;
+		}
 
 	}
-	$en = json_encode($ret);
-	echo $en;
-//}
-
+	echo json_encode($ret);
+}
 mysql_close();
-
 ?>
 
 
