@@ -1,18 +1,14 @@
 <?php
-/* $conn = mysql_connect(":/cloudsql/freepark-1091:frank", "root", ""); */
-$conn = mysql_connect("localhost:3306", "root", "rootmysql");
+$conn = mysql_connect(":/cloudsql/freepark-1091:frank", "root", "");
+/*$conn = mysql_connect("localhost:3306", "root", "rootmysql"); */
 if (!$conn) {
-	file_put_contents("ze.txt",  mysql_error());
     die('Connect Error (' . mysql__error());
 }
 
-
-//Select Database
-$db_selected = mysql_select_db('test');
+$db_selected = mysql_select_db('freepark');
 if (!$db_selected) {
-		file_put_contents("ze1.txt",  mysql_error());
     die ('Can\'t use db : ' . mysql_error());
-}
+}	
 
 $PP = file_get_contents("php://input");
 $data = json_decode($PP);
@@ -26,24 +22,13 @@ $ret[name]=$name;
 $ret[parkId]=$parkId;
 $ret[dates] = array();
 $ret[used] = array();
-/*
-	$sql = "CREATE TABLE freedays_tbl (
-	  owner varchar(64) ,
-	  parkId varchar(64),
-	  user varchar(64),
-	  free_date date,
-	  PRIMARY KEY  (parkId,free_date)
-	) ENGINE=InnoDB DEFAULT CHARSET=latin1";
-	
-	$retval = mysql_query( $sql );
-	file_put_contents("ze2.txt",  mysql_error());
-*/
-	
+
+//Select Database
+
 	
 if ($cmd == "put") {
-	file_put_contents("zin.txt", $PP);
 	//remove unused entries first.
-	$sql = "DELETE FROM freedays_tbl WHERE parkId='$parkId' AND (user IS NULL OR user='');";
+	$sql = "DELETE FROM freedays_tbl WHERE parkId='$parkId' AND (userId IS NULL OR userId='');";
 	$result = mysql_query($sql);
 	for ($i = 0; $i < count($data->dates); $i++) {
 		$dd = $data->dates[$i];
@@ -60,7 +45,7 @@ if ( $cmd=="get" || $cmd =="put") {
 		$idx=0;
 		while($row = mysql_fetch_array($result)) {	
 			 $dts[$idx] = $row['free_date'];
-			 $used[$idx] = $row['user'];
+			 $used[$idx] = $row['userId'];
 			 $idx++;
 		}
 		$ret[dates] = $dts;
@@ -68,13 +53,17 @@ if ( $cmd=="get" || $cmd =="put") {
 	}
 	$en = json_encode($ret);
 	echo $en;
-	file_put_contents("zos.txt", $en );
 }
 if ( $cmd=="rel" ) {
-	$sql = "UPDATE freedays_tbl SET user=null WHERE user ='$data->user'  AND free_date = '$data->date'";
+	$sql = "UPDATE freedays_tbl SET userId = NULL WHERE userId ='$data->userId'  AND free_date = '$data->date'";
 	$result = mysql_query($sql);
 }
-if ( $cmd=="all" || $cmd="rel") {
+if ( $cmd=="res" ) {
+	$sql = "UPDATE freedays_tbl SET userId = '$data->userId' WHERE userId IS NULL  AND free_date = '$data->date' LIMIT 1";
+	$result = mysql_query($sql);
+	file_put_contents("zdts.txt", $sql . " : " . $result  ." -> " . mysql_error() );
+}
+if ( $cmd=="all" || $cmd="rel" || $cmd="res") {
 	$sql = "SELECT * from freedays_tbl";
 	$result = mysql_query($sql);
 	if ($result) {
@@ -83,7 +72,7 @@ if ( $cmd=="all" || $cmd="rel") {
 		while($row = mysql_fetch_array($result)) {
 			 $own[$idx] = $row['owner'];
 			 $prk[$idx] = $row['parkId'];
-			 $usr[$idx] = $row['user'];
+			 $usr[$idx] = $row['userId'];
 			 $fre[$idx] = $row['free_date'];
 			 $idx++;
 		}
@@ -95,7 +84,7 @@ if ( $cmd=="all" || $cmd="rel") {
 	}
 	$en = json_encode($ret);
 	echo $en;
-	file_put_contents("zdts.txt", $en );
+	file_put_contents("zout.txt", $en );
 }
 
 mysql_close();
