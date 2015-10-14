@@ -2,11 +2,13 @@
 $conn = mysql_connect(":/cloudsql/freepark-1091:frank", "root", "");
 /*$conn = mysql_connect("localhost:3306", "root", "rootmysql"); */
 if (!$conn) {
+	echo 'Connect Error (' . mysql_error()
     die('Connect Error (' . mysql_error());
 }
 
 $db_selected = mysql_select_db('freepark');
 if (!$db_selected) {
+	echo 'Can\'t use db : ' . mysql_error()
     die ('Can\'t use db : ' . mysql_error());
 }	
 
@@ -61,7 +63,7 @@ if ( $cmd=="res" ) {
 	$sql = "UPDATE freedays_tbl SET userId = '$data->userId' WHERE userId IS NULL  AND free_date = '$data->date' LIMIT 1";
 	$result = mysql_query($sql);
 }
-if ( $cmd=="all" || $cmd="rel" || $cmd="res") {
+//if ( $cmd=="all" || $cmd="rel" || $cmd="res") {
 	$sql = "SELECT * from freedays_tbl";
 	$result = mysql_query($sql);
 	if ($result) {
@@ -82,7 +84,7 @@ if ( $cmd=="all" || $cmd="rel" || $cmd="res") {
 	}
 	$en = json_encode($ret);
 	echo $en;
-}
+//}
 
 mysql_close();
 
