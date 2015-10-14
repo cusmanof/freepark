@@ -1,5 +1,6 @@
 <?php
 $conn = mysql_connect(":/cloudsql/freepark-1091:frank", "root", "");
+echo "here"
 /*$conn = mysql_connect("localhost:3306", "root", "rootmysql"); */
 if (!$conn) {
     die('Connect Error (' . mysql__error());
