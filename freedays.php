@@ -29,11 +29,11 @@ $ret[used] = array();
 	
 if ($cmd == "put") {
 	//remove unused entries first.
-	$sql = "DELETE FROM freedays_tbl WHERE parkId='$parkId' AND (userId IS NULL OR userId='');";
+	$sql = "DELETE FROM freedays_tbl WHERE parkId='$parkId' AND (userId IS NULL OR userId='')";
 	$result = mysql_query($sql);
 	for ($i = 0; $i < count($data->dates); $i++) {
 		$dd = $data->dates[$i];
-		$sql = "INSERT INTO freedays_tbl (owner, parkId, free_date) VALUES ('$name','$parkId','$dd');";
+		$sql = "INSERT INTO freedays_tbl (owner, parkId, free_date) VALUES ('$name','$parkId','$dd')";
 		$result = mysql_query($sql);
 		
 	}
