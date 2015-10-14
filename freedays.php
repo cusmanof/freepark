@@ -1,9 +1,11 @@
+<html>
+<body>
+hello 
 <?php
 $conn = mysql_connect(":/cloudsql/freepark-1091:frank", "root", "");
-echo "here"
 /*$conn = mysql_connect("localhost:3306", "root", "rootmysql"); */
 if (!$conn) {
-    die('Connect Error (' . mysql__error());
+    die('Connect Error (' . mysql_error());
 }
 
 $db_selected = mysql_select_db('freepark');
@@ -87,5 +89,7 @@ if ( $cmd=="all" || $cmd="rel" || $cmd="res") {
 
 mysql_close();
 
-
 ?>
+</body>
+</html>
+
