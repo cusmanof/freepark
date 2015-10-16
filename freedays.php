@@ -32,8 +32,15 @@ if ($cmd == "put") {
 	$result = mysql_query($sql);
 	for ($i = 0; $i < count($data->dates); $i++) {
 		$dd = $data->dates[$i];
-		$sql = "INSERT INTO freedays_tbl (owner, parkId, free_date) VALUES ('$name','$parkId','$dd');";
+		$sql = "SELECT * from freedays_tbl WHERE userId IS NOT NULL AND free_date ='$dd' AND owner IS NULL";
 		$result = mysql_query($sql);
+		if (mysql_num_rows($result) > 0) {
+			$sql = "UPDATE freedays_tbl SET owner='$name',parkId='$parkId' WHERE userId='$data->userId' AND free_date='$dd' LIMIT 1";
+			$result = mysql_query($sql);
+		} else {		
+			$sql = "INSERT INTO freedays_tbl (owner, parkId, free_date) VALUES ('$name','$parkId','$dd');";
+			$result = mysql_query($sql);
+		}
 		
 	}
 }
