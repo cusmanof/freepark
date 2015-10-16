@@ -63,7 +63,18 @@ if ( $cmd == "res" ) {
 	$sql = "UPDATE freedays_tbl SET userId = '$data->userId' WHERE userId IS NULL  AND free_date = '$data->date' LIMIT 1";
 	$result = mysql_query($sql);
 }
-if ( $cmd == "all" || $cmd == "rel" || $cmd == "res") {
+if ( $cmd == "req" ) {
+	$sql = "SELECT * from freedays_tbl WHERE userId ='$data->userId' AND free_date ='$data->date' AND owner IS NULL";
+	$result = mysql_query($sql);
+	if (mysql_num_rows($result) > 0) {
+		$sql = "DELETE FROM freedays_tbl WHERE userId ='$data->userId' AND free_date ='$data->date' AND owner IS NULL";
+		$result = mysql_query($sql);
+	} else {
+		$sql = "INSERT INTO freedays_tbl (userId, free_date) VALUES ('$data->userId','$data->date');";
+		$result = mysql_query($sql);
+	}		
+}
+if ( $cmd == "all" || $cmd == "rel" || $cmd == "res"  || $cmd == "req") {
 	$sql = "SELECT * from freedays_tbl";
 	$result = mysql_query($sql);
 	if ($result) {
