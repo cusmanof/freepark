@@ -1,6 +1,6 @@
 <?php
 $conn = mysql_connect(":/cloudsql/fpark-1098:frank", "root", "");
-/*$conn = mysql_connect("localhost:3306", "root", "rootmysql"); */
+//$conn = mysql_connect("localhost:3306", "root", "rootmysql");
 if (!$conn) {
 	echo 'Connect Error (' . mysql_error();
     die('Connect Error (' . mysql_error());
@@ -25,17 +25,18 @@ $ret['used'] = array();
 
 //Select Database
 
+//file_put_contents ( "zpp.txt" , $PP); 
 	
 if ($cmd == "put") {
 	//remove unused entries first.
-	$sql = "DELETE FROM freedays_tbl WHERE parkId='$parkId' AND (userId IS NULL OR userId='');";
+	$sql = "DELETE FROM freedays_tbl WHERE parkId='$parkId' AND userId='';";
 	$result = mysql_query($sql);
 	for ($i = 0; $i < count($data->dates); $i++) {
 		$dd = $data->dates[$i];
-		$sql = "SELECT * from freedays_tbl WHERE userId IS NOT NULL AND free_date ='$dd' AND parkId IS NULL";
+		$sql = "SELECT * from freedays_tbl WHERE userId !='' AND free_date ='$dd' AND parkId=''";
 		$result = mysql_query($sql);
 		if (mysql_num_rows($result) > 0) {
-			$sql = "UPDATE freedays_tbl SET owner='$name',parkId='$parkId' WHERE userId IS NOT NULL AND free_date ='$dd' AND parkId IS NULL LIMIT 1";
+			$sql = "UPDATE freedays_tbl SET owner='$name',parkId='$parkId' WHERE  userId !='' AND free_date ='$dd' AND parkId='' LIMIT 1";
 			$result = mysql_query($sql);
 		} else {		
 			$sql = "INSERT INTO freedays_tbl (owner, parkId, free_date) VALUES ('$name','$parkId','$dd');";
@@ -63,26 +64,29 @@ if ( $cmd == "get" || $cmd  == "put") {
 	}
 }
 if ( $cmd == "rel" ) {
-	$sql = "UPDATE freedays_tbl SET userId = NULL WHERE userId ='$data->userId'  AND free_date = '$data->date'";
+	$sql = "UPDATE freedays_tbl SET userId = '' WHERE userId ='$data->userId'  AND free_date = '$data->date'";
 	$result = mysql_query($sql);
 }
 if ( $cmd == "res" ) {
-	$sql = "UPDATE freedays_tbl SET userId = '$data->userId' WHERE userId IS NULL  AND free_date = '$data->date' LIMIT 1";
+	$sql = "UPDATE freedays_tbl SET userId = '$data->userId' WHERE userId=''  AND free_date = '$data->date' LIMIT 1";
 	$result = mysql_query($sql);
 }
 if ( $cmd == "req" ) {
-	$sql = "SELECT * from freedays_tbl WHERE userId ='$data->userId' AND free_date ='$data->date' AND owner IS NULL";
+	$sql = "SELECT * from freedays_tbl WHERE userId ='$data->userId' AND free_date ='$data->date' AND parkId=''";
+//	file_put_contents ( "z3.txt" , $sql . " : ". $result);
 	$result = mysql_query($sql);
 	if (mysql_num_rows($result) > 0) {
-		$sql = "DELETE FROM freedays_tbl WHERE userId ='$data->userId' AND free_date ='$data->date' AND owner IS NULL";
+		$sql = "DELETE FROM freedays_tbl WHERE userId ='$data->userId' AND free_date ='$data->date' AND parkId=''";
 		$result = mysql_query($sql);
+//		file_put_contents ( "z1.txt" , $sql . " : ". $result); 
 	} else {
 		$sql = "INSERT INTO freedays_tbl (userId, free_date) VALUES ('$data->userId','$data->date');";
 		$result = mysql_query($sql);
+//		file_put_contents ( "z2.txt" , $sql . " : ". $result); 
 	}		
 }
 if ( $cmd == "all" || $cmd == "rel" || $cmd == "res"  || $cmd == "req") {
-	$sql = "SELECT * from freedays_tbl";
+	$sql = "SELECT * from freedays_tbl WHERE free_date >= CURDATE()";
 	$result = mysql_query($sql);
 	if ($result) {
 		// output data of each row
