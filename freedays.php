@@ -1,13 +1,13 @@
 <?php
-//$conn = mysql_connect(":/cloudsql/fpark-1098:frank", "root", "");
-$conn = mysql_connect("localhost:3307", "root", "rootmysql");
+$conn = mysql_connect(":/cloudsql/fpark-1098:frank", "root", "");
+//$conn = mysql_connect("localhost:3307", "root", "rootmysql");
 if (!$conn) {
 	echo 'Connect Error (' . mysql_error();
     die('Connect Error (' . mysql_error());
 }
 
-//$db_selected = mysql_select_db('freepark');
-$db_selected = mysql_select_db('test');
+$db_selected = mysql_select_db('freepark');
+//$db_selected = mysql_select_db('test');
 if (!$db_selected) {
 	echo 'Can\'t use db : ' . mysql_error();
     die ('Can\'t use db : ' . mysql_error());

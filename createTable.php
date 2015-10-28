@@ -1,6 +1,6 @@
 <?php
-//$mysqli = mysqli_connect(":/cloudsql/fpark-1098:frank", "root", "", 'freepark');
-$mysqli = mysqli_connect("localhost:3307", "root", "rootmysql",'test' );
+$mysqli = mysqli_connect(":/cloudsql/fpark-1098:frank", "root", "", 'freepark');
+//$mysqli = mysqli_connect("localhost:3307", "root", "rootmysql",'test' );
 if ($mysqli->connect_errno) {
     echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
 }
