@@ -7,6 +7,9 @@ handlers:
 
 - url: /create
   script: createTable.php
+
+- url: /admin
+  script: admin.php
   
 - url: .*
   script: freedays.php

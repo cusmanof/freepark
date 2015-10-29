@@ -11,16 +11,15 @@
 
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO, MYSQL323' */;
 
 
 --
 -- Create schema test
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ freepark;
-USE freepark;
-
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ test;
+USE test;
 
 DROP TABLE IF EXISTS `freedays_tbl`;
 CREATE TABLE `freedays_tbl` (
@@ -29,7 +28,7 @@ CREATE TABLE `freedays_tbl` (
   `userId` varchar(64) NOT NULL DEFAULT '',
   `free_date` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`parkId`,`free_date`,`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) TYPE=InnoDB;
 
 /*!40000 ALTER TABLE `freedays_tbl` DISABLE KEYS */;
 INSERT INTO `freedays_tbl` (`owner`,`parkId`,`userId`,`free_date`) VALUES 
@@ -79,7 +78,7 @@ CREATE TABLE `groups` (
   `name` varchar(20) NOT NULL,
   `description` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) TYPE=InnoDB AUTO_INCREMENT=5;
 
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
 INSERT INTO `groups` (`id`,`name`,`description`) VALUES 
@@ -100,7 +99,7 @@ CREATE TABLE `login_attempts` (
   `login` varchar(100) NOT NULL,
   `time` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 /*!40000 ALTER TABLE `login_attempts` DISABLE KEYS */;
 /*!40000 ALTER TABLE `login_attempts` ENABLE KEYS */;
@@ -126,7 +125,7 @@ CREATE TABLE `users` (
   `company` varchar(100) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=5;
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`,`ip_address`,`username`,`password`,`salt`,`email`,`activation_code`,`forgotten_password_code`,`forgotten_password_time`,`remember_code`,`created_on`,`last_login`,`active`,`first_name`,`last_name`,`company`,`phone`) VALUES 
@@ -151,7 +150,7 @@ CREATE TABLE `users_groups` (
   KEY `fk_users_groups_groups1_idx` (`group_id`),
   CONSTRAINT `fk_users_groups_groups1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `fk_users_groups_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) AUTO_INCREMENT=13;
 
 /*!40000 ALTER TABLE `users_groups` DISABLE KEYS */;
 INSERT INTO `users_groups` (`id`,`user_id`,`group_id`) VALUES 
